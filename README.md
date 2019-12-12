@@ -11,7 +11,7 @@ However, when the situation is as below, this key-value method cannot be control
 
 ### Suggestion
 
-Compared with the key-value form, this method also has disadvantages. Its performance is not as good as key-value and its time complexity is higher. Because a single user stores more content, the memory utilization is low. So, if there is no special requirement that must control the user to limit the access frequency every 60 minutes, it is recommended to use the form of key-value.
+Compared with the key-value, Redis list also has disadvantages: its performance is not as good as key-value and its time complexity is higher. Because every user stores more content, the memory utilization is low. So, if there is no special requirement that must control the user to limit the access frequency in every 60 minutes, it is recommended to use the Redis key-value.
 
 ## Run the demo for testing
 
@@ -44,7 +44,7 @@ The remaining time will be dispayed in the page when user reach the limitation.
     Rate limit exceeded. Try again in 117 seconds
 
 ## Usage 
-As a api to apply the rate limiting on the whole website:
+As a API to apply the rate limiting on the whole website:
 ```javascript
 var rateLimit = require("./app/lib/rateLimiting.js");
 const rateLimiting = new rateLimit({
