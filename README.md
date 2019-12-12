@@ -35,8 +35,6 @@ Compared with the key-value, Redis list also has disadvantages: its performance 
         demo.pug              -- Demo for tesing
     app.js                    --  entrance of Demo
 
-
-
 ### Run
 
     node app.js
@@ -45,8 +43,8 @@ Then visit the website on http://127.0.0.1:3001
 
 The unit testing : user could request 5 times in every 2minuts.
 The remaining time will be dispayed in the page when user reach the limitation.
-  
- Rate limit exceeded. Try again in 117 seconds
+
+Rate limit exceeded. Try again in 117 seconds
 
 ## Usage
 
@@ -66,7 +64,7 @@ app.use(rateLimiting);
 
 #### redisURL: url
 
-The url address of redis to be connected, underfined means localhost
+The url address of redis to be connected, underfined means 127.0.0.1:6379
 
 #### appName: string
 

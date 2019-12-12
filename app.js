@@ -21,7 +21,7 @@ app.use(rateLimiting);
 app.use("/", routes);
 
 app.listen(3001, function() {
-  console.log("Revision graphing app listening on port 3001!");
+  console.log("Testing app listening on 127.0.0.1:3001!");
 });
 
 module.exports = app;
