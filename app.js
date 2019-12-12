@@ -13,13 +13,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //Rate-limit
 const rateLimiting = new rateLimit({
   appName: "test",
-  expire: 2 * 60 * 1000, // 15 minutes
+  expire: 2 * 60 * 1000, // 2 minutes
   max: 5
 });
-
-//console.log(apiLimiter.resetIp);
-//apiLimiter.resetIp;
-
 app.use(rateLimiting);
 
 app.use("/", routes);

@@ -1,7 +1,6 @@
 const redis = require("ioredis");
 
 const RedisListStore = function(options) {
-  console.log(options);
   // create the client
   const client = redis.createClient(options.redisURL);
   const predix = "rl-" + options.appName + ":";
@@ -59,7 +58,7 @@ const RedisListStore = function(options) {
     const rdskey = predix + key;
     client.lpop(rdskey, (err, res) => {
       if (err) {
-        return;
+        return err;
       }
     });
   };
