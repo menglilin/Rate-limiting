@@ -10,20 +10,22 @@ const RedisListStore = function(options) {
     const rdskey = predix + key;
     const now = new Date().getTime();
 
-    // check request count
+    // check request count by ip
     client.llen(rdskey, (err, res) => {
       if (err) {
         return cb(err);
       }
-
+      //if the ip didn't reach the limitation add the new timestamp to list
       if (res < options.max) {
         client.lpush(rdskey, now, (err, res) => {
           if (err) {
             return cb(err);
           }
+
           return cb();
         });
       } else {
+        // if the list equal max, get the earlist timestamp to check if this expired
         client.lindex(rdskey, -1, (err, res) => {
           if (err) {
             return cb(err);
@@ -31,9 +33,11 @@ const RedisListStore = function(options) {
 
           let resetTime = parseInt(res) + parseInt(options.expire) - now;
 
+          // if the earlest timstamp is not expired return the time remaining to user
           if (resetTime > 0) {
             return cb(null, resetTime);
           } else {
+            // if the earlest timstamp is not expired add the new timestamp and delete the earlest one
             client.lpush(rdskey, now, (err, res) => {
               if (err) {
                 return cb(err);
