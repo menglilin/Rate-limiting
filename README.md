@@ -63,7 +63,7 @@ The remaining time will be dispayed in the page when user reach the limitation.
     Rate limit exceeded. Try again in 117 seconds
 
 If you want to reset the rate limiting of the demo, please goto http://127.0.0.1:3002/reset
-And click the **reset** button. Then this user could request 5 times again. This function is just for the Demo, so the IP address is defined.
+And click the **reset** button. Then this user could request 5 times again. This is the Reset Demo page, so the IP address is defined for localhost.
 
 ## Usage
 
