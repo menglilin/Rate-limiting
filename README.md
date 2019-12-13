@@ -33,7 +33,7 @@ Although Redis sorted set could cover more situation with a good performance tha
 
 ### Document structure
 
-* The rate-limiting files are: rateLimiting.js and redisList.js
+* The rate-limiting files are: **rateLimiting.js** and **redisList.js**
 
         app
             controllers
