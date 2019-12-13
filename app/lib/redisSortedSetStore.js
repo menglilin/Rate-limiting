@@ -56,7 +56,7 @@ const RedisListStore = function(options) {
           // return the reset time and last request time
           var lastReq = res[4];
 
-          //delete the expired timestamp -- save memory
+          //delete the expired timestamp -- just for saving memory
           param = ['"' + rdskey + '"', 0, parseInt(now - options.expire - 1)];
           client.zremrangebyscore(param).catch(err => {
             return cb(err);
@@ -68,7 +68,7 @@ const RedisListStore = function(options) {
   };
 
   // decrease the request count, delete the last request timestamp in the set
-  this.decrement = function({ key, lastReq }) {
+  this.decrement = ({ key, lastReq }) => {
     let rdskey = prefix + key;
 
     param = ['"' + rdskey + '"', lastReq];
@@ -79,7 +79,7 @@ const RedisListStore = function(options) {
   };
 
   // reset the rate limit of ip
-  this.resetKey = function(key, cb) {
+  this.resetKey = (key, cb) => {
     let rdskey = prefix + key;
 
     client.del('"' + rdskey + '"', (err, res) => {
