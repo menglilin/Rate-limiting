@@ -1,4 +1,4 @@
-const RedisStore = require("./redisListStore");
+const RedisStore = require("./redisSortedSetStore");
 
 function RateLimit(options) {
   /**
@@ -44,17 +44,17 @@ function RateLimit(options) {
     const key = req.ip.replace("::ffff:", "");
 
     //add the request to store
-    store.incr(key, function(err, resetTime) {
+    store.incr(key, function(err, resetTime, lastReq) {
       if (err) {
         return next(err);
       }
 
-      // decrease the count when user did not request successfully
+      // delete the last request when user did not request successfully
       if (options.skipFailedRequests) {
         let decremented = false;
         const decreaseCount = () => {
           if (!decremented) {
-            store.decrement(key, res => {});
+            store.decrement({ key, lastReq }, res => {});
             decremented = true;
           }
         };
