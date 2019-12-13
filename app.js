@@ -17,6 +17,7 @@ const rateLimiting = rateLimit({
   max: 5
 });
 
+//set Rate-limiting on demo page
 app.use("/demo", rateLimiting);
 
 app.use("/", routes);

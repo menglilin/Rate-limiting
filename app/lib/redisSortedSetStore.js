@@ -35,21 +35,16 @@ const RedisListStore = function(options) {
               return cb();
             });
         } else {
-          // if the count reach max, delete the expired timestamp and return the reset time and last request time
+          // if the count reach max, return the reset time and last request time
           var lastReq = res[4];
+
+          //delete the expired timestamp save memory
           param = ['"' + rdskey + '"', 0, parseInt(now - options.expire - 1)];
-          client
-            .zremrangebyscore(param)
-            .catch(err => {
-              return cb(err);
-            })
-            .then(res => {
-              cb(
-                null,
-                parseInt(lastReq) + parseInt(options.expire) - now,
-                lastReq
-              );
-            });
+          client.zremrangebyscore(param).catch(err => {
+            return cb(err);
+          });
+
+          cb(null, parseInt(lastReq) + parseInt(options.expire) - now, lastReq);
         }
       });
   };
