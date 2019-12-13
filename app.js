@@ -21,8 +21,8 @@ app.use("/demo", rateLimiting);
 
 app.use("/", routes);
 
-app.listen(3001, function() {
-  console.log("Testing app listening on 127.0.0.1:3001!");
+app.listen(3002, function() {
+  console.log("Testing app listening on 127.0.0.1:3002!");
 });
 
 module.exports = app;

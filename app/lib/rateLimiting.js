@@ -12,23 +12,26 @@ function RateLimit(options) {
    * skipFailedRequests : boolean : Do not count failed requests (status >= 400)
    * handler : function : the function used when user is limited
    */
-  console.log(options);
   options = Object.assign(
     {
       redisURL: undefined,
       appName: "",
       expire: 60 * 60 * 1000,
-      max: 1000,
+      max: 100,
       message: "",
       statusCode: 429,
       skipFailedRequests: false,
       handler: function(req, res, next) {
-        res.status(options.statusCode).send(options.message);
+        console.log(res.message);
+        if (options.message) {
+          res.status(options.statusCode).send(options.message);
+        } else {
+          res.status(options.statusCode).send(res.message);
+        }
       }
     },
     options
   );
-  console.log(options);
   // store to use for persisting rate limit data
   const store = new RedisStore(options);
 
@@ -78,10 +81,8 @@ function RateLimit(options) {
 
       // if the request is limited reset the message to show how many seconds left
       if (resetTime) {
-        console.log(options.message);
-        console.log(resetTime);
         if (options.message == "") {
-          options.message =
+          res.message =
             "Rate limit exceeded. Try again in " +
             Math.ceil(resetTime / 1000) +
             " seconds";

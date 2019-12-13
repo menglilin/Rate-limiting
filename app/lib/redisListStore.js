@@ -32,7 +32,6 @@ const RedisListStore = function(options) {
           }
 
           let resetTime = parseInt(res) + parseInt(options.expire) - now;
-
           // if the earlest timstamp is not expired return the time remaining to user
           if (resetTime > 0) {
             cb(null, resetTime);
