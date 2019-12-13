@@ -2,23 +2,24 @@
 
 ### Store methods 
 
-In Generally, for request rate limiting, there are two store methods mainly be used : memory and Redis key-value form.
+In Generally, there are two store methods mainly be used in request rate limiting: memory and Redis key-value form.
 The principle of these two methods is to store the key-value pairs of the accessed IP and count number, and clear them when expried.
 
-However, when the situation is as below, this key-value method cannot control user requests to access only 100 times during every 60 minutes : When a user requests once in the first minute, then requests 99 times in the 59th minute.And in the 62nd minute, key-value limitation refreshed, he can request 100 times again. As a result, in the 60 minutes from 50th minutes to 110th minutes, he requested 199 times.
+However, this key-value method cannot limit user's requests to access only 100 times during every 60 minutes.   
+For example, When a user requests once in the first minute, then requests 99 times in the 59th minute.And in the 62nd minute, key-value limitation refreshed, he can request 100 times again. However, he requested 199 times from 50th minutes to 110th minutes which is also 60 minutes.
 
-In order to solve this situation, there are two options.  
+#### In order to solve this situation, there are two options: 
 1. Redis list: When the request comes, determine whether the value of the list is greater than max. If not, insert the latest timestamp into the head of the list. Otherwise, get the last record in the list, check whether it is expired. Delete it after expiration and insert the latest one into the head of the list. 
 2. Redis sorted set: When the request comes in, get the request timestamps that has not expired in the sorted set and check whether the count greater than max. If not, add the latest request timestamp to the set. Otherwise, access is denied. 
 
-Comparing them, I chose to use the sorted set. Because the sorted set is implemented with hash table and the time complexity is low. In addition, the list needs to be judged at the logical layer, and then redis is called for deletion and writing respectively. This cannot prevent concurrency. With a sorted set, just get and write, which can prevent concurrency effectively. We can also delete expired data while saving access, saving memory.
-
+Comparing them, I chose to use the sorted set. Because the sorted set is storing data in hash and the time complexity is low. In addition, the list needs to be judged at the logical level, and then redis is called for deletion and writing respectively. This cannot prevent concurrency. With a sorted set, just get and write, which can prevent concurrency effectively. We can also delete expired data while saving access, saving memory.
 
 Therefore, in this challenge, I have used **Redis Sorted set** method as the store strategy. In order to make the rate limiting can be achieved smoothly within every 60 minutes base on a good performance.
 
 ### Suggestion
 
-Although Redis sorted set could cover more situation and the performance also not bad. The memory utilization of Key-value method is high. And it can solve most situation. So, if there is no special requirement that must control the user to limit the access frequency in every 60 minutes, it is recommended to use the Redis key-value method.
+Although Redis sorted set could cover more situation with a good performance than key-value. The memory utilization of Key-value is higher. It has also been proven that in reality, it is sufficient to meet the needs of rate limiting. So, if there is no special requirement that must limit the request rate in every 60 minutes, it is recommended to use the Redis key-value method. It is enough with best performance.
+
 
 ## Run the demo for testing
 
