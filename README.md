@@ -1,17 +1,17 @@
 # Rate-limiting
 
-### Store methods
+### Store methods 
 
-In Generally, for request rate limiting, there are two methods mainly be used: memory and Redis key-value.
-The principle of these two methods is to store the key-value pairs of the accessed IP and count number, and clear them every hour.
+In Generally, for request rate limiting, there are two store methods mainly be used : memory and Redis key-value form.
+The principle of these two methods is to store the key-value pairs of the accessed IP and count number, and clear them when expried.
 
-However, when the situation is as below, this key-value method cannot be controlled every 60 minutes, and the user requests to access only 100 times: When a user requests once in the first minute, then 99 times in the 59th minute, and then in the 62nd minute, limitation refreshed, he can request 100 times. As a result, in the 60 minutes from 59th minutes to 118th minutes, he requested 199 times.
+However, when the situation is as below, this key-value method cannot control user requests to access only 100 times during every 60 minutes : When a user requests once in the first minute, then requests 99 times in the 59th minute.And in the 62nd minute, key-value limitation refreshed, he can request 100 times again. As a result, in the 60 minutes from 50th minutes to 110th minutes, he requested 199 times.
 
-- In this development, I have challenged to used the **Redis list** method to avoid this situation, so that the rate limiting can be achieved smoothly within every 60 minutes.
+Therefore, in this challenge, I have used **Redis list** method to avoid this situation. In order to make the rate limiting can be achieved smoothly within every 60 minutes.
 
 ### Suggestion
 
-Compared with the key-value, Redis list also has disadvantages: its performance is not as good as key-value and its time complexity is higher. Because every user stores more content, the memory utilization is low. So, if there is no special requirement that must control the user to limit the access frequency in every 60 minutes, it is recommended to use the Redis key-value.
+Although Redis list could cover more situation,it also has disadvantages: its performance is not as good as key-value method and its time complexity is higher. Because every user stores more content, the memory utilization is low. So, if there is no special requirement that must control the user to limit the access frequency in every 60 minutes, it is recommended to use the Redis key-value method.
 
 ## Run the demo for testing
 
