@@ -33,31 +33,54 @@ Compared with the key-value, Redis list also has disadvantages: its performance 
         demo.routes.js        -- Demo for testing
       views
         demo.pug              -- Demo for tesing
+        rest.pug              -- Demo for reset Key
+    public
+      js
+        main.js               -- Demo for reset Key
     app.js                    --  entrance of Demo
 
 ### Run
 
     node app.js
 
-Then visit the website on http://127.0.0.1:3001
+Then visit the website on http://127.0.0.1:3001/demo
 
 The unit testing : user could request 5 times in every 2minuts.
 The remaining time will be dispayed in the page when user reach the limitation.
 
-Rate limit exceeded. Try again in 117 seconds
+    Rate limit exceeded. Try again in 117 seconds
+
+If you want to reset the rate limiting of the demo, please goto http://127.0.0.1:3001/reset
+And click the **reset** button. Then this user could request 5 times again. This function is just for the Demo, so the IP address is defined.
 
 ## Usage
 
-As a API to apply the rate limiting on the whole website:
+As a API to apply the rate limiting on the demo page:
 
 ```javascript
 var rateLimit = require("./app/lib/rateLimiting.js");
-const rateLimiting = new rateLimit({
+const rateLimiting = rateLimit({
   appName: "test",
   expire: 2 * 60 * 1000, // 2 minutes
   max: 5
 });
-app.use(rateLimiting);
+app.use("/demo", rateLimiting);
+```
+
+As a API to reset the rate limiting of a specific key:
+
+```javascript
+var rateLimit = require("./app/lib/rateLimiting.js");
+const rateLimiting = rateLimit({
+  appName: "test"
+});
+rateLimiting.resetKey(key, function(err, result) {
+  if (!err) {
+    res.json(result);
+  } else {
+    console.log(err);
+  }
+});
 ```
 
 ### Configuration options
