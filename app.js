@@ -16,6 +16,7 @@ const rateLimiting = rateLimit({
   expire: 2 * 60 * 1000, // 2 minutes
   max: 5
 });
+console.log("app.js");
 app.use("/demo", rateLimiting);
 
 app.use("/", routes);

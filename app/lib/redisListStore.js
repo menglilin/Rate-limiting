@@ -8,8 +8,6 @@ const RedisListStore = function(options) {
   //method to increase the count
   this.incr = (key, cb) => {
     const rdskey = prefix + key;
-    console.log("key");
-    console.log(rdskey);
     const now = new Date().getTime();
 
     // check request count by ip
