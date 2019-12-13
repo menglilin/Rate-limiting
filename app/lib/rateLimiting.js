@@ -12,6 +12,7 @@ function RateLimit(options) {
    * skipFailedRequests : boolean : Do not count failed requests (status >= 400)
    * handler : function : the function used when user is limited
    */
+  console.log(options);
   options = Object.assign(
     {
       redisURL: undefined,
@@ -21,13 +22,13 @@ function RateLimit(options) {
       message: "",
       statusCode: 429,
       skipFailedRequests: false,
-      handler: function(req, res, next) {
+      handler: function(req, res /*, next*/) {
         res.status(options.statusCode).send(options.message);
       }
     },
     options
   );
-
+  console.log(options);
   // store to use for persisting rate limit data
   const store = new RedisStore(options);
 
@@ -42,7 +43,7 @@ function RateLimit(options) {
 
   function rateLimit(req, res, next) {
     //init the key of rate limiting
-    const key = req.ip;
+    const key = req.ip.replace("::ffff:", "");
 
     //add the request to store
     store.incr(key, function(err, resetTime) {
@@ -60,23 +61,22 @@ function RateLimit(options) {
           }
         };
 
-        if (options.skipFailedRequests) {
-          res.on("finish", () => {
-            if (res.statusCode >= 400 && res.statusCode != options.statusCode) {
-              decreaseCount();
-            }
-          });
+        res.on("finish", () => {
+          if (res.statusCode >= 400 && res.statusCode != options.statusCode) {
+            decreaseCount();
+          }
+        });
 
-          res.on("close", () => {
-            if (!res.finished) {
-              decreaseCount();
-            }
-          });
+        res.on("close", () => {
+          if (!res.finished) {
+            decreaseCount();
+          }
+        });
 
-          res.on("error", () => decreaseCount());
-        }
+        res.on("error", () => decreaseCount());
       }
 
+      // if the request is limited reset the message to show show many seconds left
       if (resetTime) {
         if (options.message == "") {
           options.message =
@@ -84,11 +84,13 @@ function RateLimit(options) {
             Math.ceil(resetTime / 1000) +
             " seconds";
         }
-        return options.handler(req, res, next);
+        return options.handler(req, res);
       }
       next();
     });
   }
+  // reset the request from the IP address
+  rateLimit.resetKey = store.resetKey.bind(store);
 
   return rateLimit;
 }

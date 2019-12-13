@@ -3,11 +3,13 @@ const redis = require("ioredis");
 const RedisListStore = function(options) {
   // create the client
   const client = redis.createClient(options.redisURL);
-  const predix = "rl-" + options.appName + ":";
+  const prefix = "rl-" + options.appName + ":";
 
   //method to increase the count
   this.incr = (key, cb) => {
-    const rdskey = predix + key;
+    const rdskey = prefix + key;
+    console.log("key");
+    console.log(rdskey);
     const now = new Date().getTime();
 
     // check request count by ip
@@ -35,7 +37,7 @@ const RedisListStore = function(options) {
 
           // if the earlest timstamp is not expired return the time remaining to user
           if (resetTime > 0) {
-            return cb(null, resetTime);
+            cb(null, resetTime);
           } else {
             // if the earlest timstamp is not expired add the new timestamp and delete the earlest one
             client
@@ -56,7 +58,7 @@ const RedisListStore = function(options) {
 
   // decrease the request count
   this.decrement = function(key) {
-    let rdskey = predix + key;
+    let rdskey = prefix + key;
     client.lpop(rdskey, (err, res) => {
       if (err) {
         return err;
@@ -64,14 +66,14 @@ const RedisListStore = function(options) {
     });
   };
 
-  // reset the rate limit
-  this.resetKey = function(key) {
-    let rdskey = predix + key;
+  // reset the rate limit of ip
+  this.resetKey = function(key, cb) {
+    let rdskey = prefix + key;
     client.del(rdskey, (err, res) => {
       if (err) {
-        return err;
+        cb(err);
       }
-      return res;
+      cb(null, res);
     });
   };
 };
