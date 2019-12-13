@@ -7,11 +7,18 @@ The principle of these two methods is to store the key-value pairs of the access
 
 However, when the situation is as below, this key-value method cannot control user requests to access only 100 times during every 60 minutes : When a user requests once in the first minute, then requests 99 times in the 59th minute.And in the 62nd minute, key-value limitation refreshed, he can request 100 times again. As a result, in the 60 minutes from 50th minutes to 110th minutes, he requested 199 times.
 
-Therefore, in this challenge, I have used **Redis list** method to avoid this situation. In order to make the rate limiting can be achieved smoothly within every 60 minutes.
+In order to solve this situation, there are two options.  
+1. Redis list: When the request comes, determine whether the value of the list is greater than max. If not, insert the latest timestamp into the head of the list. Otherwise, get the last record in the list, check whether it is expired. Delete it after expiration and insert the latest one into the head of the list. 
+2. Redis sorted set: When the request comes in, get the request timestamps that has not expired in the sorted set and check whether the count greater than max. If not, add the latest request timestamp to the set. Otherwise, access is denied. 
+
+Comparing them, I chose to use the sorted set. Because the sorted set is implemented with hash table and the time complexity is low. In addition, the list needs to be judged at the logical layer, and then redis is called for deletion and writing respectively. This cannot prevent concurrency. With a sorted set, just get and write, which can prevent concurrency effectively. We can also delete expired data while saving access, saving memory.
+
+
+Therefore, in this challenge, I have used **Redis Sorted set** method as the store strategy. In order to make the rate limiting can be achieved smoothly within every 60 minutes base on a good performance.
 
 ### Suggestion
 
-Although Redis list could cover more situation,it also has disadvantages: its performance is not as good as key-value method and its time complexity is higher. Because every user stores more content, the memory utilization is low. So, if there is no special requirement that must control the user to limit the access frequency in every 60 minutes, it is recommended to use the Redis key-value method.
+Although Redis sorted set could cover more situation and the performance also not bad. The memory utilization of Key-value method is high. And it can solve most situation. So, if there is no special requirement that must control the user to limit the access frequency in every 60 minutes, it is recommended to use the Redis key-value method.
 
 ## Run the demo for testing
 
@@ -27,19 +34,19 @@ Although Redis list could cover more situation,it also has disadvantages: its pe
 
         app
             controllers
-                demo.controller.js    -- Demo for testing
+                demo.controller.js              -- Demo for testing
             lib
-                rateLimiting.js       -- **rateLimiting**
-                redisList.js          -- **store file of rateLimiting**
+                rateLimiting.js                 -- **rateLimiting**
+                redisSortedSetStore.js          -- **store file of rateLimiting**
             routes
-                demo.routes.js        -- Demo for testing
+                demo.routes.js                  -- Demo for testing
             views
-                demo.pug              -- Demo for tesing
-                reset.pug              -- Demo for reset Key
+                demo.pug                        -- Demo for tesing
+                reset.pug                       -- Demo for reset Key
         public
             js
-                main.js               -- Demo for reset Key
-        app.js                        -- entrance of Demo
+                main.js                         -- Demo for reset Key
+        app.js                                  -- entrance of Demo
 
 ### Run
 
