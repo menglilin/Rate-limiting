@@ -35,7 +35,7 @@ Although Redis list could cover more situation,it also has disadvantages: its pe
                 demo.routes.js        -- Demo for testing
             views
                 demo.pug              -- Demo for tesing
-                rest.pug              -- Demo for reset Key
+                reset.pug              -- Demo for reset Key
         public
             js
                 main.js               -- Demo for reset Key
