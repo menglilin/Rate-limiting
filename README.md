@@ -19,11 +19,11 @@ Compared with the key-value, Redis list also has disadvantages: its performance 
 
     npm install
 
-Please install Redis on your device and run it before run the demo
+* Please install Redis on your device and run it before run the demo
 
 ### Document structure
 
-The rate-limiting files are: rateLimiting.js and redisList.js
+* The rate-limiting files are: rateLimiting.js and redisList.js
 
     app
       controllers
@@ -69,7 +69,7 @@ const rateLimiting = rateLimit({
 app.use("/demo", rateLimiting);
 ```
 
-As a API to reset the rate limiting of a specific key:
+As a API to reset rate limiting with IP:
 
 ```javascript
 var rateLimit = require("./app/lib/rateLimiting.js");
