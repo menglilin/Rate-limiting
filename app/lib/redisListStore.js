@@ -34,7 +34,7 @@ const RedisListStore = function(options) {
           let resetTime = parseInt(res) + parseInt(options.expire) - now;
           // if the earlest timstamp is not expired return the time remaining to user
           if (resetTime > 0) {
-            cb(null, resetTime);
+            return cb(null, resetTime);
           } else {
             // if the earlest timstamp is not expired add the new timestamp and delete the earlest one
             client
@@ -68,7 +68,7 @@ const RedisListStore = function(options) {
     let rdskey = prefix + key;
     client.del(rdskey, (err, res) => {
       if (err) {
-        cb(err);
+        return cb(err);
       }
       cb(null, res);
     });
