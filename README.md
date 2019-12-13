@@ -19,27 +19,27 @@ Compared with the key-value, Redis list also has disadvantages: its performance 
 
     npm install
 
-- Please install Redis on your device and run it before run the demo
+Please install Redis on your device and run it before run the demo
 
 ### Document structure
 
-- The rate-limiting files are: rateLimiting.js and redisList.js
+The rate-limiting files are: rateLimiting.js and redisList.js
 
-  app
-  controllers
-  demo.controller.js -- Demo for testing
-  lib
-  rateLimiting.js -- **rateLimiting**
-  redisList.js -- **store file of rateLimiting**
-  routes
-  demo.routes.js -- Demo for testing
-  views
-  demo.pug -- Demo for tesing
-  rest.pug -- Demo for reset Key
-  public
-  js
-  main.js -- Demo for reset Key
-  app.js -- entrance of Demo
+    app
+      controllers
+        demo.controller.js    -- Demo for testing
+      lib
+        rateLimiting.js       -- **rateLimiting**
+        redisList.js          -- **store file of rateLimiting**
+      routes
+        demo.routes.js        -- Demo for testing
+      views
+        demo.pug              -- Demo for tesing
+        rest.pug              -- Demo for reset Key
+    public
+      js
+        main.js               -- Demo for reset Key
+    app.js                    -- entrance of Demo
 
 ### Run
 
