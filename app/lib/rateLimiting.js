@@ -22,7 +22,6 @@ function RateLimit(options) {
       statusCode: 429,
       skipFailedRequests: false,
       handler: function(req, res, next) {
-        console.log(res.message);
         if (options.message) {
           res.status(options.statusCode).send(options.message);
         } else {
