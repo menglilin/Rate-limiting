@@ -45,14 +45,14 @@ Compared with the key-value, Redis list also has disadvantages: its performance 
 
     node app.js
 
-Then visit the website on http://127.0.0.1:3001/demo
+Then visit the website on http://127.0.0.1:3002/demo
 
 The unit testing : user could request 5 times in every 2minuts.
 The remaining time will be dispayed in the page when user reach the limitation.
 
     Rate limit exceeded. Try again in 117 seconds
 
-If you want to reset the rate limiting of the demo, please goto http://127.0.0.1:3001/reset
+If you want to reset the rate limiting of the demo, please goto http://127.0.0.1:3002/reset
 And click the **reset** button. Then this user could request 5 times again. This function is just for the Demo, so the IP address is defined.
 
 ## Usage
