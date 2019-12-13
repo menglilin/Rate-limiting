@@ -6,8 +6,8 @@ const RedisListStore = function(options) {
    *
    * redisURL : url -  the address of redis, underfined means localhost
    * appName: string - the predix of redis key
-   * expire : milliseconds : how long of the rate limiting
-   * max : int - how many times of user could request
+   * expire : milliseconds - how long of the rate limiting
+   * max : int - how many times of user could request before expired
    */
   options = Object.assign(
     {

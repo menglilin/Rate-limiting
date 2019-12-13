@@ -5,11 +5,11 @@ function RateLimit(options) {
    *
    * redisURL : url -  the address of redis, underfined means localhost
    * appName: string - the predix of redis key
-   * expire : milliseconds : how long of the rate limiting
-   * max : int - how many times of user could request
+   * expire : milliseconds - how long of the rate limiting
+   * max : int - how many times of user could request before expired
    * message: string -  message for user when reach the max
    * statusCode: int - the statusCode to return to user when the reach the max
-   * skipFailedRequests : boolean : Do not count failed requests (status >= 400)
+   * skipFailedRequests : boolean - Do not count failed requests (status >= 400)
    * handler : function : the function used when user is limited
    */
   options = Object.assign(
