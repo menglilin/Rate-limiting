@@ -22,11 +22,7 @@ function RateLimit(options) {
       statusCode: 429,
       skipFailedRequests: false,
       handler: function(req, res, next) {
-        if (options.message) {
-          res.status(options.statusCode).send(options.message);
-        } else {
-          res.status(options.statusCode).send(res.message);
-        }
+        res.status(options.statusCode).send(res.message);
       }
     },
     options
@@ -80,12 +76,12 @@ function RateLimit(options) {
 
       // if the request is limited reset the message to show how many seconds left
       if (resetTime) {
-        if (options.message == "") {
-          res.message =
-            "Rate limit exceeded. Try again in " +
+        res.message = options.message
+          ? options.message
+          : "Rate limit exceeded. Try again in " +
             Math.ceil(resetTime / 1000) +
             " seconds";
-        }
+
         return options.handler(req, res, next);
       }
       next();
