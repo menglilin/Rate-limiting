@@ -24,15 +24,11 @@ const RedisListStore = function(options) {
 
   //increase the count
   this.incr = (key, cb) => {
-    var rdskey = prefix + key;
+    var rdskey = '"' + prefix + key + '"';
     const now = new Date().getTime();
 
     //get the requests timestamp list which hasn't expired
-    var param = [
-      '"' + rdskey + '"',
-      parseInt(now - options.expire),
-      parseInt(now)
-    ];
+    var param = [rdskey, parseInt(now - options.expire), parseInt(now)];
 
     client
       .zrangebyscore(param)
@@ -42,7 +38,7 @@ const RedisListStore = function(options) {
       .then(res => {
         //check if the count reach the max, if not, add new timestamp to set
         if (res.length < options.max) {
-          param = ['"' + rdskey + '"', parseInt(now), parseInt(now)];
+          param = [rdskey, parseInt(now), parseInt(now)];
 
           client
             .zadd(param)
@@ -57,7 +53,7 @@ const RedisListStore = function(options) {
           var lastReq = res[4];
 
           //delete the expired timestamp -- just for saving memory
-          param = ['"' + rdskey + '"', 0, parseInt(now - options.expire - 1)];
+          param = [rdskey, 0, parseInt(now - options.expire - 1)];
           client.zremrangebyscore(param).catch(err => {
             return cb(err);
           });
