@@ -88,6 +88,8 @@ const rateLimit = require("./app/lib/rateLimiting.js");
 const rateLimiting = new rateLimit({
   appName: "test"
 });
+
+//const key = '';
 rateLimiting.resetKey(key, function(err, result) {
   if (!err) {
     res.json(result);
