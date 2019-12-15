@@ -24,7 +24,8 @@ const RedisSortedSetStore = function(options) {
 
   //increase the count
   this.increase = (key, cb) => {
-    var rdskey = '"' + prefix + key + '"';
+    // the key of sorted set should be a string
+    var rdskey = "'" + prefix + key + "'";
     const now = new Date().getTime();
 
     //get the requests timestamp list which hasn't expired
@@ -65,9 +66,9 @@ const RedisSortedSetStore = function(options) {
 
   // decrease the request count, delete the last request timestamp in the set
   this.decrease = ({ key, lastReq }) => {
-    let rdskey = prefix + key;
+    let rdskey = "'" + prefix + key + "'";
 
-    param = ['"' + rdskey + '"', lastReq];
+    param = [rdskey, lastReq];
 
     client.zrem(param).catch(err => {
       return err;
@@ -76,9 +77,9 @@ const RedisSortedSetStore = function(options) {
 
   // reset the rate limit of ip
   this.resetKey = (key, cb) => {
-    let rdskey = prefix + key;
+    let rdskey = "'" + prefix + key + "'";
 
-    client.del('"' + rdskey + '"', (err, res) => {
+    client.del(rdskey, (err, res) => {
       if (err) {
         return cb(err);
       }
