@@ -72,7 +72,7 @@ And click the **reset** button. Then this user could request 5 times again. This
 Apply the rate limiting API on the demo page:
 
 ```javascript
-var rateLimit = require("./app/lib/rateLimiting.js");
+const rateLimit = require("./app/lib/rateLimiting.js");
 const rateLimiting = new rateLimit({
   appName: "test",
   expire: 2 * 60 * 1000, // 2 minutes
@@ -84,7 +84,7 @@ app.use("/demo", rateLimiting);
 As an API to reset rate limiting with IP:
 
 ```javascript
-var rateLimit = require("./app/lib/rateLimiting.js");
+const rateLimit = require("./app/lib/rateLimiting.js");
 const rateLimiting = new rateLimit({
   appName: "test"
 });
