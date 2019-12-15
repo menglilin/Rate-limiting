@@ -25,7 +25,7 @@ Therefore, in this challenge, I have used **Redis Sorted set** method as the sto
 
 Although Redis sorted set could cover more situations with good performance than key-value. The memory utilization of the Key-value is higher. It has also been proven that in reality, it is sufficient to meet the needs of rate-limiting. So, if there is no special requirement that must limit the request rate in every 60 minutes, it is recommended to use the Redis key-value method. It is enough with better performance.
 
-## Run the demo for testing
+## Demo for testing
 
 ### install
 
