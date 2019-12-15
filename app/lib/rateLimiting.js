@@ -1,4 +1,4 @@
-const RedisStore = require("./redisSortedSetStore");
+const RedisSortedSetStore = require("./redisSortedSetStore");
 
 function RateLimit(options) {
   /**
@@ -28,7 +28,10 @@ function RateLimit(options) {
     options
   );
   // store to use for persisting rate limit data
-  const store = new RedisStore(options);
+  // For extends : chould change to another store method
+  const store = options.store
+    ? options.store
+    : new RedisSortedSetStore(options);
 
   // ensure that the store has the incr method
   if (

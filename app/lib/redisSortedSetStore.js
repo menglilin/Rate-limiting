@@ -1,6 +1,6 @@
 const redis = require("ioredis");
 
-const RedisListStore = function(options) {
+const RedisSortedSetStore = function(options) {
   /**
    * default params
    *
@@ -87,4 +87,4 @@ const RedisListStore = function(options) {
   };
 };
 
-module.exports = RedisListStore;
+module.exports = RedisSortedSetStore;
