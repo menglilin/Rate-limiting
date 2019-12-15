@@ -25,7 +25,7 @@ const RedisSortedSetStore = function(options) {
   //increase the count
   this.increase = (key, cb) => {
     // the key of sorted set should be a string
-    var rdskey = "'" + prefix + key + "'";
+    const rdskey = "'" + prefix + key + "'";
     const now = new Date().getTime();
 
     //get the requests timestamp list which hasn't expired
@@ -67,8 +67,7 @@ const RedisSortedSetStore = function(options) {
   // decrease the request count, delete the last request timestamp in the set
   this.decrease = ({ key, lastReq }) => {
     let rdskey = "'" + prefix + key + "'";
-
-    param = [rdskey, lastReq];
+    let param = [rdskey, lastReq];
 
     client.zrem(param).catch(err => {
       return err;
