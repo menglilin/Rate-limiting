@@ -11,7 +11,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Rate-limit
-const rateLimiting = rateLimit({
+const rateLimiting = new rateLimit({
   appName: "test",
   expire: 2 * 60 * 1000, // 2 minutes
   max: 5
