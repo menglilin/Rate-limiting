@@ -129,5 +129,5 @@ The function used the request is limited
 
 #### store : new Function() 
 
-For extending: change to another store function
+For extending: change to another store function, this function must implement: incr, decrement and resetKey functions.
 
