@@ -73,7 +73,7 @@ Apply the rate limiting API on the demo page:
 
 ```javascript
 var rateLimit = require("./app/lib/rateLimiting.js");
-const rateLimiting = rateLimit({
+const rateLimiting = new rateLimit({
   appName: "test",
   expire: 2 * 60 * 1000, // 2 minutes
   max: 5
@@ -85,7 +85,7 @@ As an API to reset rate limiting with IP:
 
 ```javascript
 var rateLimit = require("./app/lib/rateLimiting.js");
-const rateLimiting = rateLimit({
+const rateLimiting = new rateLimit({
   appName: "test"
 });
 rateLimiting.resetKey(key, function(err, result) {
