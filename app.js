@@ -1,10 +1,10 @@
-var express = require("express");
-var bodyParser = require("body-parser");
-var path = require("path");
-var routes = require("./app/routes/demo.routes.js");
-var rateLimit = require("./app/lib/rateLimiting.js");
+const express = require("express");
+const bodyParser = require("body-parser");
+const path = require("path");
+const routes = require("./app/routes/demo.routes.js");
+const rateLimit = require("./app/lib/rateLimiting.js");
 
-var app = express();
+const app = express();
 
 app.set("views", path.join(__dirname, "app", "views"));
 app.use(express.static(path.join(__dirname, "public")));

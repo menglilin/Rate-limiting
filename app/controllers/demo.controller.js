@@ -1,4 +1,4 @@
-var rateLimit = require("../lib/rateLimiting.js");
+const rateLimit = require("../lib/rateLimiting.js");
 
 module.exports.showPage = function(req, res) {
   res.render("demo.pug");
