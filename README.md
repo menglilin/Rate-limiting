@@ -3,24 +3,24 @@
 ### Store methods 
 
 #### Situation
-In Generally, there are two store methods mainly be used in request rate limiting: **memory** and **Redis key-value** form.
-The principle of these two methods is to store the key-value pairs of the accessed IP and count number, and clear them when expried.
+Generally, there are two store methods mainly be used in request rate limiting: **memory** and **Redis key-value** form.
+The principle of these two methods is to store the key-value pairs of the accessed IP and count number, and clear them when expired.
 
-However, this key-value method cannot limit user's requests to access only 100 times during every 60 minutes.   
-For example: When a user requests once in the first minute, then requests 99 times in the 59th minute.And in the 62nd minute, key-value limitation refreshed, he can request 100 times again. However, he requested 199 times from 50th minutes to 110th minutes which is also 60 minutes.
+However, this key-value method cannot limit the user's requests to access only 100 times every 60 minutes.   
+For example: When a user requests once in the first minute, then requests 99 times in the 59th minute. And in the 62nd minute, key-value limitation refreshed, he can request 100 times again. However, he requested 199 times from 50th minutes to 110th minutes which is also 60 minutes.
 
-#### In order to solve this situation, there are two options: 
+#### To solve this situation, there are two options: 
 1. **Redis list**: When the request comes, determine whether the value of the list is greater than max. If not, insert the latest timestamp into the head of the list. Otherwise, get the last record in the list, check whether it is expired. Delete it after expiration and insert the latest one into the head of the list. 
-2. **Redis sorted set**: When the request comes in, get the request timestamps that has not expired in the sorted set and check whether the count greater than max. If not, add the latest request timestamp to the set. Otherwise, access is denied. 
+2. **Redis sorted set**: When the request comes in, get the request timestamps that have not expired in the sorted set and check whether the count greater than max. If not, add the latest request timestamp to the set. Otherwise, access is denied. 
 
 #### Decision
-Comparing them, I chose to use the sorted set. Because the sorted set is storing data in hash and the time complexity is low. In addition, the list needs to be judged at the logical level, and then redis is called for deletion and writing respectively. This cannot prevent concurrency. With a sorted set, just get and write, which can prevent concurrency effectively. We can also delete expired data while saving access, saving memory.
+Comparing them, I chose to use the sorted set. Because the sorted set is storing data in hash and the time complexity is low. Besides, the list needs to be judged at the logical level, and then Redis is called for deletion and writing respectively. This cannot prevent concurrency. With a sorted set, just get and write, which can prevent concurrency effectively. We can also delete expired data while saving access, saving memory.
 
-Therefore, in this challenge, I have used **Redis Sorted set** method as the store strategy. In order to make the rate limiting can be achieved smoothly within every 60 minutes base on a good performance.
+Therefore, in this challenge, I have used **Redis Sorted set** method as the store strategy. To make the rate-limiting can be achieved smoothly within 60 minutes base on a good performance.
 
 #### Suggestion
 
-Although Redis sorted set could cover more situation with a good performance than key-value. The memory utilization of Key-value is higher. It has also been proven that in reality, it is sufficient to meet the needs of rate limiting. So, if there is no special requirement that must limit the request rate in every 60 minutes, it is recommended to use the Redis key-value method. It is enough with best performance.
+Although Redis sorted set could cover more situations with good performance than key-value. The memory utilization of the Key-value is higher. It has also been proven that in reality, it is sufficient to meet the needs of rate-limiting. So, if there is no special requirement that must limit the request rate in every 60 minutes, it is recommended to use the Redis key-value method. It is enough with better performance.
 
 
 ## Run the demo for testing
@@ -57,12 +57,12 @@ Although Redis sorted set could cover more situation with a good performance tha
 
 Then visit the website on http://127.0.0.1:3002/demo
 
-The unit testing : user could request 5 times in every 2minuts.
-The remaining time will be dispayed in the page when user reach the limitation.
+The unit testing : a user could request 5 times in every 2minuts.
+The remaining time will be displayed on the page when the user reaches the limitation.
 
     Rate limit exceeded. Try again in 117 seconds
 
-If you want to reset the rate limiting of the demo, please goto http://127.0.0.1:3002/reset
+If you want to reset the rate-limiting of the demo, please go to http://127.0.0.1:3002/reset
 And click the **reset** button. Then this user could request 5 times again. This is the Reset Demo page, so the IP address is defined for localhost.
 
 ## Usage
@@ -95,17 +95,17 @@ rateLimiting.resetKey(key, function(err, result) {
 
 ### Configuration options
 
-#### redisURL: url
+#### redisURL: URL
 
-The url address of redis to be connected, underfined means 127.0.0.1:6379
+The URL address of Redis to be connected, undefined means 127.0.0.1:6379
 
 #### appName: string
 
-Will be added in the predix of redis key
+Will be added in the prefix of the key in Redis
 
 #### expire : milliseconds
 
-How long of the set of rate limiting
+How long of the set of rate-limiting
 
 #### max : int
 
@@ -113,11 +113,11 @@ How many times of user could request
 
 #### message: string
 
-Message return to user when reach the max
+Message return to the user when reaching the max
 
 #### statusCode: int
 
-The statusCode to return to user when reach the max
+The statusCode to return to the user when reaching the max
 
 #### skipFailedRequests : boolean
 
@@ -129,5 +129,5 @@ The function used the request is limited
 
 #### store : new Function() 
 
-For extending: change to another store function, this function must implement: incr, decrement and resetKey functions.
+For extending: change to another store function. The functions must implement in store function: incr, decrement and resetKey functions. 
 
