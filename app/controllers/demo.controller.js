@@ -10,7 +10,7 @@ module.exports.showResetPage = function(req, res) {
 // reset the rate limiting of IP
 module.exports.resetKey = function(req, res) {
   var key = req.query.ip;
-  const rateLimiting = rateLimit({
+  const rateLimiting = new rateLimit({
     appName: "test"
   });
   rateLimiting.resetKey(key, function(err, result) {
