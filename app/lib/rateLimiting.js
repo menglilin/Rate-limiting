@@ -35,9 +35,9 @@ function RateLimit(options) {
 
   // ensure that the store has the incr method
   if (
-    typeof store.incr !== "function" ||
+    typeof store.increase !== "function" ||
     typeof store.resetKey !== "function" ||
-    (options.skipFailedRequests && typeof store.decrement !== "function")
+    (options.skipFailedRequests && typeof store.decrease !== "function")
   ) {
     throw new Error("The store is not valid.");
   }
@@ -47,7 +47,7 @@ function RateLimit(options) {
     const key = req.ip.replace("::ffff:", "");
 
     //add the request to store
-    store.incr(key, function(err, resetTime, lastReq) {
+    store.increase(key, function(err, resetTime, lastReq) {
       if (err) {
         return next(err);
       }
@@ -57,7 +57,7 @@ function RateLimit(options) {
         let decremented = false;
         const decreaseCount = () => {
           if (!decremented) {
-            store.decrement({ key, lastReq }, res => {});
+            store.decrease({ key, lastReq }, res => {});
             decremented = true;
           }
         };

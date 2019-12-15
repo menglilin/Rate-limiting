@@ -23,7 +23,7 @@ const RedisSortedSetStore = function(options) {
   const prefix = "rl-" + options.appName + ":";
 
   //increase the count
-  this.incr = (key, cb) => {
+  this.increase = (key, cb) => {
     var rdskey = '"' + prefix + key + '"';
     const now = new Date().getTime();
 
@@ -64,7 +64,7 @@ const RedisSortedSetStore = function(options) {
   };
 
   // decrease the request count, delete the last request timestamp in the set
-  this.decrement = ({ key, lastReq }) => {
+  this.decrease = ({ key, lastReq }) => {
     let rdskey = prefix + key;
 
     param = ['"' + rdskey + '"', lastReq];
