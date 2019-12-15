@@ -7,23 +7,23 @@
 Generally, there are two store methods mainly be used in request rate limiting: **memory** and **Redis key-value** form.
 The principle of these two methods is to store the key-value pairs of the accessed IP and count number, and clear them when expired.
 
-However, this key-value method cannot limit the user's requests to access only 100 times every 60 minutes.  
+However, this key-value method cannot limit the user's requests to access only 100 times in every 60 minutes.  
 For example: When a user requests once in the first minute, then requests 99 times in the 59th minute. And in the 62nd minute, key-value limitation refreshed, he can request 100 times again. However, he requested 199 times from 50th minutes to 110th minutes which is also 60 minutes.
 
 #### To solve this situation, there are two options:
 
-1. **Redis list**: When the request comes, determine whether the value of the list is greater than max. If not, insert the latest timestamp into the head of the list. Otherwise, get the last record in the list, check whether it is expired. Delete it after expiration and insert the latest one into the head of the list.
-2. **Redis sorted set**: When the request comes in, get the request timestamps that have not expired in the sorted set and check whether the count greater than max. If not, add the latest request timestamp to the set. Otherwise, access is denied.
+1. **Redis List**: When the request comes, check whether the length of the List is greater than max. If not, insert the latest timestamp into the head of the List. Otherwise, get the last record in the List, check whether it is expired. Delete it if expiration and insert the latest one into the head of the List.
+2. **Redis Sorted Set**: When the request comes , get the whole request timestamps that have not expired in the Sorted Set and check whether the count greater than max. If not, add the latest request timestamp to the set. Otherwise, access is denied.
 
 #### Decision
 
-Comparing them, I chose to use the sorted set. Because the sorted set is storing data in hash and the time complexity is low. Besides, the list needs to be judged at the logical level, and then Redis is called for deletion and writing respectively. This cannot prevent concurrency. With a sorted set, just get and write, which can prevent concurrency effectively. We can also delete expired data while saving access, saving memory.
+Comparing them, I chose to use the Sorted Set. Because the sorted set is storing data in hash and the time complexity is low. Besides, the Redis List needs to be checked at the logical level, then Redis is called for deletion and writing respectively. It cannot prevent concurrency. With the Sorted Set, we can just use get and write functions to finish the whole process. It could prevent concurrency effectively. We can also delete expired data in the process for saving memory.
 
-Therefore, in this challenge, I have used **Redis Sorted set** method as the store strategy. To make the rate-limiting can be achieved smoothly within 60 minutes base on a good performance.
+Therefore, in this challenge, I have used **Redis Sorted set** method as the store strategy. To make the rate-limiting can be achieved smoothly in every 60 minutes with a good performance.
 
 #### Suggestion
 
-Although Redis sorted set could cover more situations with good performance than key-value. The memory utilization of the Key-value is higher. It has also been proven that in reality, it is sufficient to meet the needs of rate-limiting. So, if there is no special requirement that must limit the request rate in every 60 minutes, it is recommended to use the Redis key-value method. It is enough with better performance.
+Although Redis sorted set could cover more situations than key-value with good performance, The memory utilization of the Key-value is higher. It has also been proven that in reality, key-value form is sufficient to meet the most requirments of rate-limiting. So, if there is no special requirement that must limit the request rate in every 60 minutes, it is recommended to use the Redis key-value method. It is good enough with better performance.
 
 ## Demo for testing
 
