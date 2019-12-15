@@ -91,9 +91,7 @@ const rateLimiting = new rateLimit({
 
 //const key = '';
 rateLimiting.resetKey(key, function(err, result) {
-  if (!err) {
-    res.json(result);
-  }
+  // 
 });
 ```
 
