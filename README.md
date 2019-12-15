@@ -126,3 +126,8 @@ Do not count failed requests, status >= 400 and status != statusCode( which was 
 #### handler(res,req,next) : function
 
 The function used the request is limited
+
+#### store : new Function() 
+
+For extending: change to another store function
+
