@@ -51,7 +51,7 @@ const RedisSortedSetStore = function(options) {
             });
         } else {
           // return the reset time and last request time
-          var lastReq = res[parseInt(options.max - 1)];
+          var lastReq = res[0];
 
           //delete the expired timestamp -- just for saving memory
           param = [rdskey, 0, parseInt(now - options.expire - 1)];
